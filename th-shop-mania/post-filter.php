@@ -106,54 +106,55 @@ if (!class_exists('Th_Simple_Post_filter')) {
             $dataSetting = wp_json_encode($sliderSetting);
 
             $productHtml = '';
-            $productHtml .= "<div class='woocommerce elemento-owl-slider-common-secript' data-setting='" . $dataSetting . "'>";
+            ?>
+            <div class="woocommerce elemento-owl-slider-common-secript" data-setting="<?php echo esc_attr($dataSetting); ?>"> <?php
             if (isset($availNextPrevious)) {
-                $arrowType = '-alt'; //1
+                $arrowType = '-alt'; //1 
                 // if ($options['arrow_type'] == '2') {
                 //     $arrowType = '-alt2'; //2
                 // } else if ($options['arrow_type'] == '3') {
                 //     $arrowType = ''; //3
-                // }
-                $productHtml .= '<div class="elemento-addons-owl-np-cln elemento-addons-owl-prev"><span class="dashicons dashicons-arrow-left' . $arrowType . '"></span></div>';
-                $productHtml .= '<div class="elemento-addons-owl-np-cln elemento-addons-owl-next"><span class="dashicons dashicons-arrow-right' . $arrowType . '"></span></div>';
-            }
-            $productHtml .= "<div class='elemento-owl-slider owl-carousel owl-theme'>";
-            if ($query->have_posts()) {
+                // } ?>
+                <div class="elemento-addons-owl-np-cln elemento-addons-owl-prev"><span class="dashicons dashicons-arrow-left <?php echo esc_attr($arrowType); ?>"></span></div>
+                <div class="elemento-addons-owl-np-cln elemento-addons-owl-next"><span class="dashicons dashicons-arrow-right<?php echo esc_attr($arrowType); ?>"></span></div>
+        <?php    }  ?>
+            <div class='elemento-owl-slider owl-carousel owl-theme'>
+        <?php    if ($query->have_posts()) {
                 if (isset($options['number_of_row']) && $options['number_of_row'] == '2') {
                     $countRow = 1;
                     $countTotal = count($query->posts);
-                    $itemOpen = true;
-                    $productHtml .= '<div class="item">';
-                    while ($query->have_posts()) {
+                    $itemOpen = true; ?>
+                    <div class="item">
+                <?php    while ($query->have_posts()) {
                         $query->the_post();
                         $productId = get_the_ID();
-                        $productHtml .= $this->product_html1($productId, $options);
-                        if ($countRow % 2 === 0) {
-                            $productHtml .= '</div>';
-                            $itemOpen = false;
+                        $this->product_html1($productId, $options);
+                        if ($countRow % 2 === 0) { ?>
+                            </div>
+                        <?php    $itemOpen = false;
                             if ($countTotal != $countRow) {
-                                $itemOpen = true;
-                                $productHtml .= '<div class="item">';
-                            }
+                                $itemOpen = true;  ?>
+                                <div class="item">
+                        <?php    }
                         }
                         $countRow++;
                     }
-                    if ($itemOpen) {
-                        $productHtml .= '</div>';
-                    }
+                    if ($itemOpen) { ?>
+                        </div>
+                   <?php }
                 } else {
                     while ($query->have_posts()) {
                         $query->the_post();
-                        $productId = get_the_ID();
-                        $productHtml .= '<div class="item">';
-                        $productHtml .= $this->product_html1($productId, $options);
-                        $productHtml .= '</div>';
-                    }
+                        $productId = get_the_ID();  ?>
+                        <div class="item">
+                      <?php  $this->product_html1($productId, $options); ?>
+                        </div>
+                <?php    }
                 }
-            }
-            $productHtml .= '</div>';
-            $productHtml .= '</div>';
-            return $productHtml;
+            }  ?>
+            </div>
+            <div>
+         <?php   
         }
         public function product_html1($productId, $options)
         {
@@ -166,30 +167,76 @@ if (!class_exists('Th_Simple_Post_filter')) {
             $ratingHtml = $count_rating > 0 ? wc_get_rating_html($rating, $count_rating) : false;
 
             $checkSale = $regularPrice > $currentPrice ? true : false;
+            
+            // add to cart --------------
+            $addToCart = '';
+            // $textAddTocart = $options['add_to_cart_text'] !== '' && $options['add_to_cart_text'] ? $options['add_to_cart_text'] : false;
+            $iconAddTocart = $options['add_to_cart_icon_on'] == 'on' && $options['add_to_cart_icon_on'] ? true : false;
+            // $addToCart = $this->elemento_add_tocart($product, $iconAddTocart);
+            // quick view --------------
+            // price --------------
+            $price = '<span class="elemento-addons-price">' . $currentPricehtml . '</span>';
+
+            $returnHtml = ''; ?>
+            <div class="elemento-product-outer-wrap"> <!--inner wrap -->
+  <?php     
+    // $wishlist_ = elemento_addons_wishlist_wpc($productId);
+            // $compare_ = elemento_addons_compare($productId);
+        ?>
+            <div class="elemento-product-simple-inner-wrap"> 
+                <?php 
+            //inner rap
+            // quick view 
+            if (function_exists('th_elemento_addon_quickView_enable')) { ?>
+                <a href="#" data-product="<?php echo esc_attr($productId); ?>" class="elemento-addons-quickview-simple"><?php echo __('Quick View','mania-companion'); ?></a>
+          <?php  }
             // sale price 
             $ps_sale = '';
             if ($checkSale) {
                 $salePrice = $regularPrice - $currentPrice;
                 // $saleText = __('Sale', 'mania-companion');
-                $currency_ = get_woocommerce_currency_symbol();
-                $ps_sale = '<div class="elemento-addons-sale">
-                        <span class="elemento-addons-sale-tag">-' . $currency_ . $salePrice . '</span>
-                    </div>';
-            }
-            // add to cart --------------
-            $addToCart = '';
-            // $textAddTocart = $options['add_to_cart_text'] !== '' && $options['add_to_cart_text'] ? $options['add_to_cart_text'] : false;
-            $iconAddTocart = $options['add_to_cart_icon_on'] == 'on' && $options['add_to_cart_icon_on'] ? true : false;
-            $addToCart = $this->elemento_add_tocart($product, $iconAddTocart);
-            // quick view --------------
-            // price --------------
-            $price = '<span class="elemento-addons-price">' . $currentPricehtml . '</span>';
+                $currency_ = get_woocommerce_currency_symbol(); ?>
+                <div class="elemento-addons-sale">
+                    <span class="elemento-addons-sale-tag"><?php echo '-'.esc_html($currency_).esc_html($salePrice); ?></span>
+                </div>
+         <?php   } ?>
+        <a class="img_" href="<?php echo esc_url(get_permalink($productId)); ?>">
+            <?php echo wp_kses_post( $product->get_image() ); ?>
+                                    
+        </a>
 
-            $returnHtml = '';
-            $returnHtml .= '<div class="elemento-product-outer-wrap">'; //inner wrap
-            $returnHtml .= $this->product_html2($productId, $product, $ps_sale, $ratingHtml, $price, $addToCart);
-            $returnHtml .= '</div>'; //inner wrap 
-            return $returnHtml;
+          <a class="elemento-addons-product-title" href="<?php echo esc_url(get_permalink($productId)); ?>">
+            <?php echo wp_kses_post( $product->get_name() ); ?>
+               </a>
+          <?php
+          if ($ratingHtml) { ?>
+             <div class="elemento-addons-rating">
+               <?php echo wp_kses_post( $ratingHtml ); ?> 
+             </div>
+         <?php } 
+         // add to cart 
+         ?>
+         <span class="elemento-addons-price">
+            <?php echo wp_kses_post( $currentPricehtml );  ?>
+         </span>
+           
+            </div> <?php //inner rap ?>
+
+            <div class='elemento-product-simple-inner-bottom'>
+          <?php   //button wrap
+            echo $this->elemento_add_tocart($product, $iconAddTocart);
+            
+                // buttons icon  ?>
+                <div class='buttons_'>
+                <?php 
+                elemento_addons_wishlist_wpc($productId);
+                 elemento_addons_compare($productId); ?>
+                </div>
+             
+            </div> <?php //button wrap
+             ?>
+            </div> <!--inner wrap -->
+       <?php     
         }
         private function product_html2($productId, $product, $ps_sale, $ratingHtml, $price, $addToCart)
         {
