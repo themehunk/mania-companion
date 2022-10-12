@@ -757,7 +757,7 @@ class Mania_Companion_elementoProductSimple extends Widget_Base
                 ],
                 'selectors' => [
                     '{{WRAPPER}} .elemento-product-outer-wrap .elemento-addons-price > ins' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .elemento-product-outer-wrap .elemento-addons-price > .amount > bdi' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .elemento-product-outer-wrap .elemento-addons-price > .amount' => 'color: {{VALUE}};',
                 ],
             ]
         );
@@ -1116,8 +1116,7 @@ class Mania_Companion_elementoProductSimple extends Widget_Base
     {
         $settings = $this->get_settings();
         $productCategory = $settings['post_category'];
-        $getProductByCategory = $this->post_filter()->simple_product_slider($productCategory, $settings);
-        echo $getProductByCategory;
+        $this->post_filter()->simple_product_slider($productCategory, $settings);
     }
     // class end 
 }

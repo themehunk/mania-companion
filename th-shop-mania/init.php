@@ -78,11 +78,11 @@ if (!function_exists('elemento_addons_simple_addons')) {
 if (!function_exists('elemento_addons_wishlist_wpc')) {
     function elemento_addons_wishlist_wpc($productId)
     {
-        if (intval($productId) && shortcode_exists('yith_wcwl_add_to_wishlist')) {
-            $html = '<div class="elemento-wishlist">';
-            $html .= do_shortcode('[yith_wcwl_add_to_wishlist product_id="' . $productId . '" already_in_wishslist_text="<span>already added</span>"]');
-            $html .= '</div>';
-            return $html;
+        if (intval($productId) && shortcode_exists('yith_wcwl_add_to_wishlist')) { ?>
+            <div class="elemento-wishlist">
+            <?php echo do_shortcode('[yith_wcwl_add_to_wishlist product_id="' . $productId . '" already_in_wishslist_text="<span>already added</span>"]'); ?>
+            </div>
+            <?php
         }
     }
 }
@@ -90,12 +90,11 @@ if (!function_exists('elemento_addons_wishlist_wpc')) {
 if (!function_exists('elemento_addons_compare')) {
     function elemento_addons_compare($productId)
     {
-        if (intval($productId) && (shortcode_exists('th_compare') || shortcode_exists('tpcp_compare'))) {
-            $html = '<button class="th-product-compare-btn button" data-th-product-id="' . $productId . '">';
-            $html .= '<span class="th-icon th-icon-repeat"></span>';
-            $html .= '<span class="text">' . __('Compare', 'mania-companion') . '</span>';
-            $html .= '</button>';
-            return $html;
-        }
+        if (intval($productId) && (shortcode_exists('th_compare') || shortcode_exists('tpcp_compare'))) { ?>
+            <button class="th-product-compare-btn button" data-th-product-id="<?php echo esc_attr($productId); ?>">
+            <span class="th-icon th-icon-repeat"></span>
+            <span class="text"><?php echo  __('Compare', 'mania-companion'); ?></span>
+            </button>
+      <?php  }
     }
 }

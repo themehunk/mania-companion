@@ -15,12 +15,12 @@ class elemento_post_simple
     }
     // show in page 
     function post_html($settings)
-    {
-        $html_ = '<div class="elemento-addons-simple-post">';
-        $html_ .= $this->ListGridLayout($settings);
-        $html_ .= '</div>';
-        return $html_;
-    }
+    { ?>
+        <div class="elemento-addons-simple-post">
+        <?php echo $this->ListGridLayout($settings);  ?>
+        </div>
+        
+    <?php }
     //grid list layout 
     private function ListGridLayout($options)
     {
@@ -78,19 +78,19 @@ class elemento_post_simple
                         $pagination_ = $this->pagination($totalPages, 1);
                     }
                 }
-                // post pagination 
-                $postHtml .= "<div class='elemento-post-layout-listGrid' data-setting='" . $dataSetting . "'>";
-                while ($query->have_posts()) {
+                // post pagination ?>
+                <div class='elemento-post-layout-listGrid' data-setting="<?php echo esc_attr($dataSetting); ?>">
+               <?php while ($query->have_posts()) {
                     $query->the_post();
-                    $post_id_ = get_the_ID();
-                    $postHtml .= '<div class="elemento-post-layout-iteme"><div>';
-                    $postHtml .= $this->postContentHtml($post_id_, $options);
-                    $postHtml .= '</div></div>';
-                }
-                $postHtml .= '</div>';
-                $postHtml .= $pagination_;
+                    $post_id_ = get_the_ID(); ?>
+                    <div class="elemento-post-layout-iteme"><div>
+                <?php   echo $this->postContentHtml($post_id_, $options);  ?>
+                    </div></div>
+            <?php    } ?>
+                </div>
+            <?php   $postHtml .= $pagination_;
             }
-            return $postHtml;
+            
         }
     }
     public function pagination($totalPAges, $currentPage, $ExternalProvideLinks = 4)
@@ -154,72 +154,75 @@ class elemento_post_simple
         $category_ = '';
         if (!empty($category_detail)) {
             $category_detail = json_decode(json_encode($category_detail), true);
-            $newCAtegory = array_slice($category_detail, 0, 3);
-            $category_ .= '<div class="_category_">';
-            foreach ($newCAtegory as $value_) {
+            $newCAtegory = array_slice($category_detail, 0, 3); ?>
+            <div class="_category_">
+          <?php  foreach ($newCAtegory as $value_) {
                 $category_link = get_category_link($value_['cat_ID']);
-                $category_ .= "<a target='_blank' href='" . esc_url($category_link) . "'>";
                 $category_ .= $value_['name'];
-                $category_ .= "</a>";
-            }
-            $category_ .= '</div>';
-        }
+                  ?>
+                <a target='_self' href="<?php echo esc_url($category_link);  ?>">
+              <?php echo esc_html($category_); ?>
+                </a>
+       <?php     }  ?>
+            </div>
+    <?php    }
 
-        if (get_the_post_thumbnail_url()) {
-            $imageFeaturedImage .= "<a href='" . $postLink . "' class='elemento-featured-image'>";
-            $imageFeaturedImage .= "<img src='" . get_the_post_thumbnail_url() . "' class='elemento-featured-image-image'>";
-            $imageFeaturedImage .= "</a>";
-        }
-        $html = '';
-        $html .= "<div class='elemento-post-content-all'>";
-        // content ------------------
-        $html .= $imageFeaturedImage;
-        $html .= "<div class='elemento-post-content'>";
-        // image 
-        $html .= $category_;
-        // title 
-        $html .= '<' . $options['post_title_tag'] . ' class="elemento-post-title">';
-        $html .= '<a href="' . $postLink . '">';
-        $html .= get_the_title();
-        $html .= '</a>';
-        $html .= '</' . $options['post_title_tag'] . '>';
+        if (get_the_post_thumbnail_url()) {  ?>
+            <a href="<?php echo esc_url($postLink); ?>" class='elemento-featured-image'>
+            <img src="<?php echo esc_url(get_the_post_thumbnail_url()); ?>" class='elemento-featured-image-image'>
+            </a>
+   <?php     } ?>
+        <div class='elemento-post-content-all'>
+      <?php  // content ------------------
+        echo $imageFeaturedImage; ?>
+        <div class='elemento-post-content'>
+        <?php // image  
+        echo esc_html($category_); ?>
+       <<?php echo esc_attr($options['post_title_tag']); ?> class="elemento-post-title"> 
+        <a href="<?php echo esc_url($postLink); ?>">
+        <?php wp_kses_post( get_the_title() );  ?>
+        </a>
+        </<?php echo esc_attr($options['post_title_tag']); ?> >
+    <?php 
         //post meta 
-        if (!empty($options['post_meta_data'])) {
-            $html .= '<div class="elemento-post-meta-data">';
-            if (in_array("author", $options['post_meta_data'])) {
-                $html .= '<span class="elemento-post-author">' . get_the_author() . '</span>';
-            }
-            if (in_array("date", $options['post_meta_data'])) {
-                $html .= '<span class="elemento-post-date">' . get_the_date('F j, Y') . '</span>';
-            }
+        if (!empty($options['post_meta_data'])) {  ?>
+            <div class="elemento-post-meta-data">
+        <?php    if (in_array("author", $options['post_meta_data'])) { ?>
+                <span class="elemento-post-author"><?php wp_kses_post(get_the_author()); ?></span>
+         <?php   }
+            if (in_array("date", $options['post_meta_data'])) { ?>
+                <span class="elemento-post-date"><?php wp_kses_post(get_the_date('F j, Y')); ?></span>
+        <?php    }
             // if (in_array("time", $options['post_meta_data'])) {
             //     $html .= '<span class="elemento-post-time">' . get_post_time() . '</span>';
             // }
             if (in_array("comments", $options['post_meta_data'])) {
-                $showComment = get_comments_number() ? get_comments_number() : __('No', 'mania-companion');
-                $html .= '<span class="elemento-post-comments">' . $showComment  . ' ' . __('Comment', 'mania-companion') . '</span>';
-            }
+                $showComment = get_comments_number() ? get_comments_number() : __('No', 'mania-companion'); ?>
+                <span class="elemento-post-comments">
+                <?php echo esc_html($showComment)  . ' ' . __('Comment', 'mania-companion'); ?>
+                </span>
+       <?php     } 
             // if (in_array("datemodified", $options['post_meta_data'])) {
             //     $html .= '<span class="elemento-post-date">' . get_the_author() . '</span>';
-            // }
-            $html .= '</div>';
-        }
+            // } ?>
+            </div>
+     <?php   }
         // excerpt 
         if ($options['excerpt_anable'] == 'on') {
             $excerpt_ = get_the_excerpt();
             $excerpt_ = substr($excerpt_, 0, $options['excerpt_length']);
-            $result_ = substr($excerpt_, 0, strrpos($excerpt_, ' '));
-            $html .= '<div class="elemento-post-excerpt"><p>' . $result_ . '</p></div>';
-        }
+            $result_ = substr($excerpt_, 0, strrpos($excerpt_, ' ')); ?>
+            <div class="elemento-post-excerpt"><p><?php echo esc_html($result_); ?></p></div>
+   <?php     }
         // read more 
         // read_more_new_tab
-        $readMoreNewTab = $options['read_more_new_tab'] == 'on' ? 'target="_blank"' : "";
-        $html .= '<a class="elemento-post-read-more" ' . $readMoreNewTab . ' href="' . $postLink . '">' . $options['read_more_text'] . '</a>';
-        $html .= "</div>";
-        // content ------------------
-        $html .= "</div>";
-        return $html;
-    }
+        $readMoreNewTab = $options['read_more_new_tab'] == 'on' ? '_blank' : "_self"; ?>
+        <a class="elemento-post-read-more" target="<?php echo esc_attr($readMoreNewTab); ?>" href="<?php echo esc_url($postLink); ?>"><?php echo esc_html($options['read_more_text']); ?></a>
+        </div>
+       
+        </div>
+        
+  <?php  }
     //grid list layout
 
 }
