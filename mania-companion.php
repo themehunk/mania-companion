@@ -71,7 +71,7 @@ add_action('after_setup_theme', 'mania_companion_load_plugin');
 
 
 function mania_companion_admin_scripts(){
-        wp_localize_script('th-shop-mania-admin-load', 'thsm_importlocali',  
+        wp_localize_script('th-shop-mania-admin-load', 'mania_companion_import',  
             array(
             'ajax_url'                 => admin_url('admin-ajax.php'),
             'plugin'                   => 'mania-companion'
@@ -80,7 +80,7 @@ function mania_companion_admin_scripts(){
          );
     }
 
-
+if (is_admin()) {
 /**
  * Deactivate plugin example class.
  */
@@ -102,3 +102,4 @@ class Mania_Companion_Deactivate_Plugin{
     }
 }
 new Mania_Companion_Deactivate_Plugin();
+}
