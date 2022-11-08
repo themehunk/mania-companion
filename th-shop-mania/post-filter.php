@@ -30,7 +30,7 @@ if (!class_exists('Th_Simple_Post_filter')) {
                 $numOfproduct = $options['number_of_product'];
                 $args = array(
                     'post_type' => 'product',
-                    'posts_per_page' => $numOfproduct,
+                    'posts_per_page' => absint($numOfproduct),
                     'meta_query' => array(
                         array(
                             'key' => '_stock_status',
@@ -62,7 +62,7 @@ if (!class_exists('Th_Simple_Post_filter')) {
                 $productHtml = ''; ?>
                 <div class="ea-simple-product-slider">
              <?php   if ($query->have_posts()) {
-                    echo $this->product_slide($query, $options, $stringCate);
+                    $this->product_slide($query, $options, $stringCate);
                 } ?>
                 </div>
            <?php     return $productHtml;
@@ -110,11 +110,7 @@ if (!class_exists('Th_Simple_Post_filter')) {
             <div class="woocommerce elemento-owl-slider-common-secript" data-setting="<?php echo esc_attr($dataSetting); ?>"> <?php
             if (isset($availNextPrevious)) {
                 $arrowType = '-alt'; //1 
-                // if ($options['arrow_type'] == '2') {
-                //     $arrowType = '-alt2'; //2
-                // } else if ($options['arrow_type'] == '3') {
-                //     $arrowType = ''; //3
-                // } ?>
+                 ?>
                 <div class="elemento-addons-owl-np-cln elemento-addons-owl-prev"><span class="dashicons dashicons-arrow-left <?php echo esc_attr($arrowType); ?>"></span></div>
                 <div class="elemento-addons-owl-np-cln elemento-addons-owl-next"><span class="dashicons dashicons-arrow-right<?php echo esc_attr($arrowType); ?>"></span></div>
         <?php    }  ?>
@@ -172,7 +168,7 @@ if (!class_exists('Th_Simple_Post_filter')) {
             $addToCart = '';
             // $textAddTocart = $options['add_to_cart_text'] !== '' && $options['add_to_cart_text'] ? $options['add_to_cart_text'] : false;
             $iconAddTocart = $options['add_to_cart_icon_on'] == 'on' && $options['add_to_cart_icon_on'] ? true : false;
-            // $addToCart = $this->elemento_add_tocart($product, $iconAddTocart);
+            
             // quick view --------------
             // price --------------
             $price = '<span class="elemento-addons-price">' . $currentPricehtml . '</span>';
@@ -180,15 +176,13 @@ if (!class_exists('Th_Simple_Post_filter')) {
             $returnHtml = ''; ?>
             <div class="elemento-product-outer-wrap"> <!--inner wrap -->
   <?php     
-    // $wishlist_ = elemento_addons_wishlist_wpc($productId);
-            // $compare_ = elemento_addons_compare($productId);
         ?>
             <div class="elemento-product-simple-inner-wrap"> 
                 <?php 
             //inner rap
             // quick view 
             if (function_exists('th_elemento_addon_quickView_enable')) { ?>
-                <a href="#" data-product="<?php echo esc_attr($productId); ?>" class="elemento-addons-quickview-simple"><?php echo __('Quick View','mania-companion'); ?></a>
+                <a href="#" data-product="<?php echo esc_attr($productId); ?>" class="elemento-addons-quickview-simple"><?php echo esc_html__('Quick View','mania-companion'); ?></a>
           <?php  }
             // sale price 
             $ps_sale = '';
@@ -224,7 +218,7 @@ if (!class_exists('Th_Simple_Post_filter')) {
 
             <div class='elemento-product-simple-inner-bottom'>
           <?php   //button wrap
-            echo $this->elemento_add_tocart($product, $iconAddTocart);
+            $this->elemento_add_tocart($product, $iconAddTocart);
             
                 // buttons icon  ?>
                 <div class='buttons_'>
@@ -238,44 +232,10 @@ if (!class_exists('Th_Simple_Post_filter')) {
             </div> <!--inner wrap -->
        <?php     
         }
-        private function product_html2($productId, $product, $ps_sale, $ratingHtml, $price, $addToCart)
-        {
-            $wishlist_ = elemento_addons_wishlist_wpc($productId);
-            $compare_ = elemento_addons_compare($productId);
-
-            $productHtml = '<div class="elemento-product-simple-inner-wrap">'; //inner rap
-            // quick view 
-            if (function_exists('th_elemento_addon_quickView_enable')) {
-                $productHtml .= '<a href="#" data-product="' . $productId . '" class="elemento-addons-quickview-simple">' . __('Quick View','mania-companion') . '</a>';
-            }
-            $productHtml .= $ps_sale;
-            $productHtml .= '<a class="img_" href="' . get_permalink($productId) . '">
-                                    ' . $product->get_image() . '
-                                    </a>';
-
-            $productHtml .= '<a class="elemento-addons-product-title" href="' . get_permalink($productId) . '">' . $product->get_name() . '</a>';
-            $productHtml .= $ratingHtml ? '<div class="elemento-addons-rating">' . $ratingHtml . '</div>' : '';
-            // add to cart 
-            $productHtml .=  $price;
-            $productHtml .=  '</div>'; //inner rap
-
-            $productHtml .=  "<div class='elemento-product-simple-inner-bottom'>"; //button wrap
-            $productHtml .=  $addToCart;
-            if ($wishlist_ || $compare_) {
-                // buttons icon 
-                $productHtml .=  "<div class='buttons_'>";
-                $productHtml .=  $wishlist_;
-                $productHtml .=  $compare_;
-                $productHtml .=  "</div>";
-                // buttons icon 
-            }
-            $productHtml .=  "</div>"; //button wrap
-            return $productHtml;
-        }
         function  elemento_add_tocart($product,  $icon)
         {
             $icon_ = $icon ? '<span class="dashicons dashicons-cart"></span>' : '';
-            $cart_url =  apply_filters(
+            echo apply_filters(
                 'woocommerce_loop_add_to_cart_link',
                 sprintf(
                     '<a href="%s" rel="nofollow" data-product_id="%s" data-product_sku="%s" data-quantity="%s" class="elemento-add-to-cart-btn button %s %s">%s %s</a>',
@@ -290,7 +250,7 @@ if (!class_exists('Th_Simple_Post_filter')) {
                 ),
                 $product
             );
-            return $cart_url;
+            
         }
 
         // class end 

@@ -1,4 +1,4 @@
-<?php
+<?php 
 if (!defined('SIMPLE_ADDON_URL')) {
     define('SIMPLE_ADDON_URL', plugin_dir_url(__FILE__));
 }
@@ -40,12 +40,11 @@ if (!class_exists('ManiaCompanionElementoSimpleAddon')) {
         {
             wp_enqueue_style('th-icon', SIMPLE_ADDON_URL . 'assets/th-icon/style.css', '');
             wp_enqueue_script('simple-addon-secript', SIMPLE_ADDON_URL . 'assets/custom.js', ['jquery'], '', true);
-            wp_localize_script('simple-addon-secript', 'elemento_simple_url', array('admin_ajax' => admin_url('admin-ajax.php')));
+            wp_localize_script('simple-addon-secript', 'elemento_simple_url', array('admin_ajax' => esc_url(admin_url('admin-ajax.php'))));
         }
     }
 }
 $ManiaCompanionElementoSimpleAddonobj = new ManiaCompanionElementoSimpleAddon();
-include_once SIMPLE_ADDON_PATH . 'product-simple-addon/ajx.php';
 
 // category register
 if (!function_exists('product_shop_add_category')) {
@@ -93,7 +92,7 @@ if (!function_exists('elemento_addons_compare')) {
         if (intval($productId) && (shortcode_exists('th_compare') || shortcode_exists('tpcp_compare'))) { ?>
             <button class="th-product-compare-btn button" data-th-product-id="<?php echo esc_attr($productId); ?>">
             <span class="th-icon th-icon-repeat"></span>
-            <span class="text"><?php echo  __('Compare', 'mania-companion'); ?></span>
+            <span class="text"><?php esc_html_e('Compare', 'mania-companion'); ?></span>
             </button>
       <?php  }
     }

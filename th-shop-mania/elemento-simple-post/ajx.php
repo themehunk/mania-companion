@@ -5,9 +5,6 @@ add_action('wp_ajax_nopriv_elemento_simple_post', 'elemento_simple_post');
 function elemento_simple_post()
 {
 
-    // print_r($_POST);
-    // return;
-
     // echo '<pre>';
     if (isset($_POST['post_data']['current_page']) && isset($_POST['post_data']['total_page'])) {
         $postSEttings = new elemento_post_simple();
@@ -18,21 +15,21 @@ function elemento_simple_post()
         $currentPage = $allSEttings['current_page'];
         $args = array(
             'post_type' => 'post',
-            'posts_per_page' => $numOfPost,
+            'posts_per_page' => absint($numOfPost),
         );
         // post show by 
-        if ($allSEttings['post_show_by'] !==  'recent') {
-            $args['orderby'] = $allSEttings['post_show_by'];
+        if (isset($allSEttings['post_show_by']) && $allSEttings['post_show_by'] !==  'recent') {
+            $args['orderby'] = sanitize_text_field( $allSEttings['post_show_by'] );
         }
         // page if number 
         // $checkINtPage = intval($trigger_page);
-        if ($currentPage) {
-            $args['paged'] = $currentPage;
+        if (isset($currentPage) && $currentPage) {
+            $args['paged'] = absint($currentPage);
         }
         $postHtml = '';
         $stringCate = implode(",", $category_);
         if (!in_array('all', $category_)) {
-            $args['category_name'] = $stringCate;
+            $args['category_name'] = sanitize_text_field($stringCate);
         }
         // html options 
         $query = new WP_Query($args);

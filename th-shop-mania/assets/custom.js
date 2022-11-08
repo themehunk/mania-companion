@@ -112,62 +112,7 @@
         }
       }
     },
-    quickviewModel: function (e) {
-      e.preventDefault();
-      if ($(".elemento_quick_view_model").length)
-        $(".elemento_quick_view_model").remove();
-      let thisBtn = $(this);
-      let productId = thisBtn.attr("data-product");
-      // add div over lay in body
-      let htmlBody = $("body");
-      // add div over lay in body
 
-
-      if (productId) {
-        // console.log('elemento_simple_url.admin_ajax',elemento_simple_url.admin_ajax);
-
-        $.ajax({
-          method: "post",
-          url: elemento_simple_url.admin_ajax,
-          data: {
-            action: "elemento_quick_view_product_simple",
-            product_id: productId,
-          },
-          // dataType: "JSON",
-          success: function (data) {
-            // console.log("data->", data);
-            // return;
-            htmlBody.append('<div class="elemento_quick_view_model"></div>');
-            $(".elemento_quick_view_model").html(data);
-            $(".elemento-quickview-wrapper").addClass("active");
-            let container_ = $(".elemento_quick_view_model");
-            let sliderWrapper = container_.find(
-              ".elemento-owl-slider-common-secript"
-            );
-            let getSlider = sliderWrapper.find(".elemento-owl-slider");
-            if (getSlider.length) {
-              elemento.sliderrr(sliderWrapper);
-            }
-          },
-        });
-        // console.log("productId->", productId);
-      }
-    },
-    quickviewModelClose: function () {
-      let thisBtn = $(this);
-      let wrapper_ = $(".elemento_quick_view_model");
-      wrapper_.find(".elemento-quickview-wrapper").fadeOut("slow", function () {
-        // setTimeout(() => {
-        //   wrapper_.fadeOut("slow", function () {
-        //     $(this).remove();
-        //   });
-        // }, 3000);
-        wrapper_.fadeOut("slow", function () {
-          $(this).remove();
-        });
-      });
-      // $(".elemento_quick_view_model").remove();
-    },
     elemento_plusMinus_quantity: function () {
       let getBtn = $(this);
       let thiswrapper = getBtn.closest(".quickview-add-to-cart");
@@ -225,16 +170,7 @@
         ".elemento-addons-simple-post .elemento-post-link:not(.disable)",
         elemento.postPagination
       );
-      $(document).on(
-        "click",
-        ".ea-simple-product-slider .elemento-addons-quickview-simple",
-        elemento.quickviewModel
-      );
-      $(document).on(
-        "click",
-        ".elemento-quickview-close",
-        elemento.quickviewModelClose
-      );
+      
       $(document).on(
         "click",
         ".ea-simple-product-slider .elemento_quick_view_model .quickview-add-to-cart .minus_,.ea-simple-product-slider .elemento_quick_view_model .quickview-add-to-cart .plus_",

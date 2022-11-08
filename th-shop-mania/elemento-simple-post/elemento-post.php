@@ -127,8 +127,7 @@ class elementoPostSimple extends Widget_Base
                     'p'  => __("P", "mania-companion"),
                 ],
                 'default' => 'h2',
-                // 'condition' => [
-                //     'post_title_anable' => 'on',
+                
                 // ],
             ]
         );
@@ -171,7 +170,6 @@ class elementoPostSimple extends Widget_Base
                 "separator" => "before"
             ]
         );
-        // 'options'     => ["author" => "Author", 'date' => "Date", "time" => "Time", "comments" => "Comments", "datemodified" => "Date Modified"],
         $this->add_control(
             'post_metadata_separator',
             [
@@ -187,19 +185,7 @@ class elementoPostSimple extends Widget_Base
                 ],
             ]
         );
-        // read more 
-        // $this->add_control(
-        //     'read_more_enable',
-        //     [
-        //         'label'        => __('Read More', 'mania-companion'),
-        //         'type'         => Controls_Manager::SWITCHER,
-        //         'label_on'     => __('Show', 'mania-companion'),
-        //         'label_off'    => __('Hide', 'mania-companion'),
-        //         'return_value' => 'on',
-        //         'default'      => 'on',
-        //         "separator" => "before"
-        //     ]
-        // );
+        
         $this->add_control(
             'read_more_text',
             [
@@ -210,9 +196,7 @@ class elementoPostSimple extends Widget_Base
                     'active' => true,
                 ],
                 'default' => "Read More >>",
-                // 'condition' => [
-                //     'read_more_enable' => 'on',
-                // ],
+                
             ]
         );
         $this->add_control(
@@ -224,9 +208,7 @@ class elementoPostSimple extends Widget_Base
                 'label_off'    => __('No', 'mania-companion'),
                 'return_value' => 'on',
                 'default'      => 'on',
-                // 'condition' => [
-                //     'read_more_enable' => 'on',
-                // ],
+                
             ]
         );
         $this->end_controls_section();
@@ -240,20 +222,7 @@ class elementoPostSimple extends Widget_Base
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
-        // $this->add_control(
-        //     'pagination_show',
-        //     [
-        //         'label'       => __('Pagination', 'mania-companion'),
-        //         'type'    => Controls_Manager::SELECT,
-        //         'options' => [
-        //             'n' => __('None', 'mania-companion'),
-        //             'number' => __('Numbers', 'mania-companion'),
-        //             // 'prev_next' => __('Previous/Next', 'mania-companion'),
-        //             // 'num_prev_next' => __('Numbers + Previous/Next', 'mania-companion'),
-        //         ],
-        //         'default' => 'n'
-        //     ]
-        // );
+        
         $this->add_control(
             'pagination_show',
             [
@@ -449,9 +418,6 @@ class elementoPostSimple extends Widget_Base
             [
                 'label' => __('Title', 'mania-companion'),
                 'tab'   => Controls_Manager::TAB_STYLE,
-                // 'condition' => [
-                //     'post_title_anable' => 'on',
-                // ],
             ]
         );
 
@@ -467,12 +433,7 @@ class elementoPostSimple extends Widget_Base
                             'size' => '16',
                         ],
                     ],
-                    // 'line_height' => [
-                    //     'default' => [
-                    //         'unit' => 'px',
-                    //         'size' => '12',
-                    //     ],
-                    // ],
+                    
                     'font_weight' => [
                         'default' => 'bold',
                     ],
@@ -482,33 +443,7 @@ class elementoPostSimple extends Widget_Base
                 ],
             ]
         );
-        // $this->add_control(
-        //     'title_alignment',
-        //     [
-        //         'label' => __('Alignment', 'mania-companion'),
-        //         'type' => \Elementor\Controls_Manager::CHOOSE,
-        //         'options' => [
-        //             'left' => [
-        //                 'title' => __('Left', 'mania-companion'),
-        //                 'icon' => 'fa fa-align-left',
-        //             ],
-        //             'center' => [
-        //                 'title' => __('Center', 'mania-companion'),
-        //                 'icon' => 'fa fa-align-center',
-        //             ],
-        //             'right' => [
-        //                 'title' => __('Right', 'mania-companion'),
-        //                 'icon' => 'fa fa-align-right',
-        //             ],
-        //         ],
-        //         'default' => 'left',
-        //         'selectors' => [
-        //             '{{WRAPPER}} .elemento-addons-layout-post .elemento-post-title' => 'text-align: {{VALUE}};',
-        //         ],
-        //         'toggle' => true,
-        //     ]
-        // );
-        // normal and hover 
+       
         $this->start_controls_tabs('title_style_');
         $this->start_controls_tab(
             'title_style_normal',
@@ -974,12 +909,8 @@ class elementoPostSimple extends Widget_Base
     // php render 
     protected function render()
     {
-        // echo "<pre>";
-        // echo "<h1>simple post</h1>";
-        // // // print_r($settings);
-        // echo "</pre>";
         $settings = $this->get_settings();
-        echo $this->postSetting()->post_html($settings);
+        $this->postSetting()->post_html($settings);
     }
 
     // class end 
