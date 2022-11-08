@@ -17,22 +17,19 @@ class elemento_post_simple
     function post_html($settings)
     { ?>
         <div class="elemento-addons-simple-post">
-        <?php echo $this->ListGridLayout($settings);  ?>
+        <?php $this->ListGridLayout($settings);  ?>
         </div>
         
     <?php }
     //grid list layout 
     private function ListGridLayout($options)
     {
-        // print_r($options);
-        // return;
-        // return $cate;
         if (isset($options['post_category']) && is_array($options['post_category']) && !empty($options['post_category'])) {
-            $numOfPost = $options['number_of_post'];
+            $numOfPost = absint($options['number_of_post']);
             // $numOfcolumn = $options['number_of_column'];
             $args = array(
                 'post_type' => 'post',
-                'posts_per_page' => $numOfPost,
+                'posts_per_page' => absint($numOfPost),
             );
             $stringCate = $dataSetting = $postHtml = '';
             $stringCate = implode(",", $options['post_category']);
@@ -41,14 +38,26 @@ class elemento_post_simple
             }
             // post show by 
             if ($options['post_show_by'] != 'recent') {
-                $args['orderby'] = $options['post_show_by'];
+                $args['orderby'] = sanitize_key($options['post_show_by']);
             }
             // html options 
             $query = new WP_Query($args);
             if ($query->have_posts()) {
                 // post pagination 
                 $pagination_ = '';
-                if ($options['pagination_show'] == 'on') {
+               
+                // post pagination ?>
+                <div class='elemento-post-layout-listGrid' data-setting="<?php echo esc_attr($dataSetting); ?>">
+               <?php while ($query->have_posts()) {
+                    $query->the_post();
+                    $post_id_ = get_the_ID(); ?>
+                    <div class="elemento-post-layout-iteme"><div>
+                <?php   $this->postContentHtml($post_id_, $options);  ?>
+                    </div></div>
+            <?php    } ?>
+                </div>
+            <?php   // Pagination
+                     if ($options['pagination_show'] == 'on') {
                     $totalPosts = $query->found_posts;
                     if ($totalPosts > $numOfPost) {
                         $totalPages = ceil($totalPosts / $numOfPost);
@@ -75,20 +84,9 @@ class elemento_post_simple
                             ]
                         );
                         $dataSetting = wp_json_encode($dataSetting_array);
-                        $pagination_ = $this->pagination($totalPages, 1);
+                        $this->pagination($totalPages, 1);
                     }
                 }
-                // post pagination ?>
-                <div class='elemento-post-layout-listGrid' data-setting="<?php echo esc_attr($dataSetting); ?>">
-               <?php while ($query->have_posts()) {
-                    $query->the_post();
-                    $post_id_ = get_the_ID(); ?>
-                    <div class="elemento-post-layout-iteme"><div>
-                <?php   echo $this->postContentHtml($post_id_, $options);  ?>
-                    </div></div>
-            <?php    } ?>
-                </div>
-            <?php   $postHtml .= $pagination_;
             }
             
         }
@@ -96,23 +94,25 @@ class elemento_post_simple
     public function pagination($totalPAges, $currentPage, $ExternalProvideLinks = 4)
     {
         $pagination_ = '';
-        $currentPAgeVAr2 =  $currentPage;
-        $pagination_ .= '<div class="elemento-addons-pagination">';
+        $currentPAgeVAr2 =  $currentPage; ?>
+        <div class="elemento-addons-pagination">
+            <?php
         // next previous btn 
-        $disableAndEnable =  $currentPage < 2 ? 'disable' : "";
-        $pagination_ .= '<a href="#" data-link="prev" class="elemento-post-link ' . $disableAndEnable . '">' . __('Previous','mania-companion') . '</a>';
-        // pagination link number 
+        $disableAndEnable =  $currentPage < 2 ? 'disable' : ""; ?>
+        <a href="#" data-link="prev" class="elemento-post-link <?php echo esc_attr($disableAndEnable); ?>"> <?php echo esc_html__('Previous','mania-companion'); ?> </a>
+       <?php  // pagination link number 
         // -------------------------
         // 1 - left links = 1 ,self link = 1 ==then==   2 
         // 2 - now show links ExternalProvideLinks - 2 step 1
         $shoLInksRight = $ExternalProvideLinks - 2;
         // left link 
         if ($currentPAgeVAr2 > 1) {
-            $paginationMinus = $currentPAgeVAr2 - 1;
-            $pagination_ .= '<a href="#" data-link="' . $paginationMinus . '" class="elemento-post-link">' . $paginationMinus . '</a>';
-        }
-        // current link
-        $pagination_ .= '<a href="#" data-link="' . $currentPAgeVAr2 . '" class="elemento-post-link active">' . $currentPAgeVAr2 . '</a>';
+            $paginationMinus = $currentPAgeVAr2 - 1; ?>
+            <a href="#" data-link="<?php echo esc_attr($paginationMinus); ?>" class="elemento-post-link"><?php echo esc_html($paginationMinus); ?></a>
+     <?php   }
+        // current link  ?>
+       <a href="#" data-link="<?php echo esc_attr($currentPAgeVAr2); ?>" class="elemento-post-link active"><?php echo esc_html($currentPAgeVAr2); ?></a>
+       <?php
         // right links -----------
         $calculateLink = $currentPAgeVAr2 + $shoLInksRight;
         $appearLast = true;
@@ -126,22 +126,23 @@ class elemento_post_simple
         $loopNumberGEt = $calculateLoop - $currentPAgeVAr2;
 
         for ($_i = 0; $_i < $loopNumberGEt; $_i++) {
-            $currentPAgeVAr2++;
-            $pagination_ .= '<a href="#" data-link="' . $currentPAgeVAr2 . '" class="elemento-post-link">' . $currentPAgeVAr2 . '</a>';
-        }
+            $currentPAgeVAr2++;   ?>
+            <a href="#" data-link="<?php echo esc_attr($currentPAgeVAr2); ?>" class="elemento-post-link"><?php echo esc_html($currentPAgeVAr2); ?></a>
+     <?php   }
         // right links -----------
         // last page link -----------
-        if ($appearLast) {
-            $pagination_ .= '<a href="#" class="_last-page">...</a>';
-            $pagination_ .= '<a href="#" data-link="' . $totalPAges . '" class="elemento-post-link _last-page">' . $totalPAges . '</a>';
-        }
+        if ($appearLast) { ?>
+            <a href="#" class="_last-page"><?php esc_html_e('...','mania-companion'); ?></a>
+            <a href="#" data-link="<?php echo esc_attr($totalPAges); ?>" class="elemento-post-link _last-page"><?php echo esc_html($totalPAges); ?></a>
+     <?php   }
         // -------------------------
         // next previous btn 
-        $disableAndEnable = $currentPage == $totalPAges ? 'disable' : "";
-        $pagination_ .= '<a href="#" data-link="next" class="elemento-post-link ' . $disableAndEnable . '">' . __('Next','mania-companion') . '</a>';
-        $pagination_ .= '</div>';
+        $disableAndEnable = $currentPage == $totalPAges ? 'disable' : ""; ?>
+        <a href="#" data-link="next" class="elemento-post-link <?php echo esc_attr($disableAndEnable); ?>"><?php echo esc_html__('Next','mania-companion'); ?></a> 
+        </div>
+        <?php
         // pagination data -------------- 
-        return $pagination_;
+        
     }
 
     //slider list html
@@ -152,6 +153,18 @@ class elemento_post_simple
 
         $category_detail = get_the_category($post_id_);
         $category_ = '';
+        
+
+        if (get_the_post_thumbnail_url()) {  ?>
+            <a href="<?php echo esc_url($postLink); ?>" class='elemento-featured-image'>
+            <img src="<?php echo esc_url(get_the_post_thumbnail_url()); ?>" class='elemento-featured-image-image'>
+            </a>
+   <?php     } ?>
+        <div class='elemento-post-content-all'>
+      <?php  // content ------------------
+               ?>
+        <div class='elemento-post-content'>
+        <?php // image  
         if (!empty($category_detail)) {
             $category_detail = json_decode(json_encode($category_detail), true);
             $newCAtegory = array_slice($category_detail, 0, 3); ?>
@@ -165,22 +178,10 @@ class elemento_post_simple
                 </a>
        <?php     }  ?>
             </div>
-    <?php    }
-
-        if (get_the_post_thumbnail_url()) {  ?>
-            <a href="<?php echo esc_url($postLink); ?>" class='elemento-featured-image'>
-            <img src="<?php echo esc_url(get_the_post_thumbnail_url()); ?>" class='elemento-featured-image-image'>
-            </a>
-   <?php     } ?>
-        <div class='elemento-post-content-all'>
-      <?php  // content ------------------
-        echo $imageFeaturedImage; ?>
-        <div class='elemento-post-content'>
-        <?php // image  
-        echo esc_html($category_); ?>
+    <?php    } ?>
        <<?php echo esc_attr($options['post_title_tag']); ?> class="elemento-post-title"> 
         <a href="<?php echo esc_url($postLink); ?>">
-        <?php wp_kses_post( get_the_title() );  ?>
+        <?php echo wp_kses_post( get_the_title() );  ?>
         </a>
         </<?php echo esc_attr($options['post_title_tag']); ?> >
     <?php 
@@ -188,10 +189,10 @@ class elemento_post_simple
         if (!empty($options['post_meta_data'])) {  ?>
             <div class="elemento-post-meta-data">
         <?php    if (in_array("author", $options['post_meta_data'])) { ?>
-                <span class="elemento-post-author"><?php wp_kses_post(get_the_author()); ?></span>
+                <span class="elemento-post-author"><?php echo wp_kses_post(get_the_author()); ?></span>
          <?php   }
             if (in_array("date", $options['post_meta_data'])) { ?>
-                <span class="elemento-post-date"><?php wp_kses_post(get_the_date('F j, Y')); ?></span>
+                <span class="elemento-post-date"><?php echo wp_kses_post(get_the_date('F j, Y')); ?></span>
         <?php    }
             // if (in_array("time", $options['post_meta_data'])) {
             //     $html .= '<span class="elemento-post-time">' . get_post_time() . '</span>';

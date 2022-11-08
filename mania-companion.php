@@ -62,6 +62,7 @@ function mania_companion_load_plugin(){
      if ( !function_exists('th_shop_mania_pro_load_plugin' )) {
      require_once MANIA_COMPANION_PLUGIN_PATH . 'th-shop-mania/init.php';
      require_once( MANIA_COMPANION_PLUGIN_PATH . '/import/themehunk.php' );
+     add_action('admin_enqueue_scripts', 'mania_companion_admin_scripts');
         }
     }
 
@@ -69,6 +70,17 @@ function mania_companion_load_plugin(){
 add_action('after_setup_theme', 'mania_companion_load_plugin');
 
 
+function mania_companion_admin_scripts(){
+        wp_localize_script('th-shop-mania-admin-load', 'mania_companion_import',  
+            array(
+            'ajax_url'                 => admin_url('admin-ajax.php'),
+            'plugin'                   => 'mania-companion'
+            
+           )
+         );
+    }
+
+if (is_admin()) {
 /**
  * Deactivate plugin example class.
  */
@@ -90,3 +102,4 @@ class Mania_Companion_Deactivate_Plugin{
     }
 }
 new Mania_Companion_Deactivate_Plugin();
+}
