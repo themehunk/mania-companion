@@ -73,33 +73,8 @@ add_action('after_setup_theme', 'mania_companion_load_plugin');
 function mania_companion_admin_scripts(){
         wp_localize_script('th-shop-mania-admin-load', 'mania_companion_import',  
             array(
-            'ajax_url'                 => admin_url('admin-ajax.php'),
             'plugin'                   => 'mania-companion'
             
            )
          );
     }
-
-if (is_admin()) {
-/**
- * Deactivate plugin example class.
- */
-class Mania_Companion_Deactivate_Plugin{
-    /**
-     * Constructor.
-     */
-    public function __construct(){
-        register_activation_hook( __FILE__, array( $this , 'deactivate' ) );
-    }
- 
-    /**
-     * Attempts to activate the plugin if at least PHP 5.4.
-     */
-    public function deactivate() {
-       require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-       deactivate_plugins( plugin_basename('hunk-companion/hunk-companion.php' ) );
-       
-    }
-}
-new Mania_Companion_Deactivate_Plugin();
-}
