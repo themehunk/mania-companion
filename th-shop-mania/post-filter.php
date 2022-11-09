@@ -65,7 +65,7 @@ if (!class_exists('Th_Simple_Post_filter')) {
                     $this->product_slide($query, $options, $stringCate);
                 } ?>
                 </div>
-           <?php     return $productHtml;
+           <?php     
             } else { ?>
                  <p><?php esc_html_e('No Product','mania-companion');?> </p>
           <?php  }
@@ -149,7 +149,7 @@ if (!class_exists('Th_Simple_Post_filter')) {
                 }
             }  ?>
             </div>
-            <div>
+            </div>
          <?php   
         }
         public function product_html1($productId, $options)
