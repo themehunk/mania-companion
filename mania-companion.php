@@ -74,7 +74,6 @@ function mania_companion_admin_scripts(){
         wp_localize_script('th-shop-mania-admin-load', 'mania_companion_import',  
             array(
             'plugin'                   => 'mania-companion'
-            
            )
          );
     }
